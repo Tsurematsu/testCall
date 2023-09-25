@@ -4,11 +4,11 @@ let call = new function call() {
     this.removeStream = (idClient) => {};
     this.enableMSG = false;
     this.stream = null;
-    this.start = async() => {
+    this.start = async(key) => {
         if (this.stream == null) { console.log("no stream"); return; }
         let stream = this.stream;
         this.addStream({ type: "local", stream: stream, IDclient: "local" });
-        let socket = await WWebsocket.start('CImVoVHIBNdWjnvN');
+        let socket = await WWebsocket.start(key);
         let list_members = socket.members;
         let myId = socket.drone.clientId;
         let numOnline = 0;

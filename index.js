@@ -25,9 +25,6 @@ async function main() {
     call.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     call.addStream = (obj) => { addVideoStream(obj); };
     call.removeStream = (idClient) => { removeVideoStream(idClient); };
-    let room = await call.start();
-    setTimeout(() => {
-        console.log(room.numOnline);
-    }, 1000);
+    let room = await call.start('CImVoVHIBNdWjnvN');
 }
 main();
