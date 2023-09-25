@@ -21,10 +21,18 @@ function addVideoStream(obj, muted = false) {
 }
 
 async function main() {
+    let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    stream.getVideoTracks()[0].enabled = false;
     call.enableMSG = false;
-    call.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    call.stream = stream;
     call.addStream = (obj) => { addVideoStream(obj); };
     call.removeStream = (idClient) => { removeVideoStream(idClient); };
-    let room = await call.start('CImVoVHIBNdWjnvN');
+    let room = await call.start('CImVoVHIBNdWjnvN', 'keydone', false);
+    document.getElementById('off_video').addEventListener('click', () => {
+        stream.getVideoTracks()[0].enabled = !(stream.getVideoTracks()[0].enabled);
+    });
+    document.getElementById('off_audio').addEventListener('click', () => {
+        stream.getAudioTracks()[0].enabled = !(stream.getAudioTracks()[0].enabled);
+    });
 }
 main();

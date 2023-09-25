@@ -4,15 +4,10 @@ let WWebsocket = new function() {
         "connected"
     ];
     let events = {};
-    this.start = async(id_Service = null, memo = false, opcional = () => {
-        if (!location.hash) {
-            location.hash = Math.floor(Math.random() * 0xFFFFFF).toString(16);
-        }
-        return location.hash.substring(1);
-    }) => {
+    this.start = async(id_Service = null, opcional, memo = false) => {
         if (id_Service == null) { console.log("not service"); return; }
         return await (() => new Promise(async(resolve, reject) => {
-            const roomName = 'observable-' + opcional();
+            const roomName = 'observable-' + opcional;
             let drone = new ScaleDrone(id_Service);
             let { room, members } = await (() => new Promise((resolve, reject) => {
                 drone.on('open', async() => {
