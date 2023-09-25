@@ -5,13 +5,15 @@ function removeVideoStream(IDclient) {
     video.remove();
 }
 
-function addVideoStream(stream, IDclient, muted = true) {
+function addVideoStream(obj, muted = false) {
+    let { type, stream, IDclient } = obj;
     let video = document.createElement('video')
     if (window.pubID != null) { video.setAttribute(window.pubID, ''); }
     video.classList.add('videoCall');
-    video.muted = muted;
+    video.classList.add(type);
+    video.muted = ((type == "local") ? true : muted);
     video.id = IDclient;
-    video.srcObject = stream
+    video.srcObject = stream;
     video.addEventListener('loadedmetadata', () => {
         video.play()
     })
@@ -21,8 +23,11 @@ function addVideoStream(stream, IDclient, muted = true) {
 async function main() {
     call.enableMSG = false;
     call.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    call.addStream = (stream) => { addVideoStream(stream.stream, stream.id); };
+    call.addStream = (obj) => { addVideoStream(obj); };
     call.removeStream = (idClient) => { removeVideoStream(idClient); };
-    call.start();
+    let room = await call.start();
+    setTimeout(() => {
+        console.log(room.numOnline);
+    }, 1000);
 }
 main();

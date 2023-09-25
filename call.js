@@ -7,7 +7,7 @@ let call = new function call() {
     this.start = async() => {
         if (this.stream == null) { console.log("no stream"); return; }
         let stream = this.stream;
-        this.addStream({ typeof: "local", stream: stream, id: "local" });
+        this.addStream({ type: "local", stream: stream, IDclient: "local" });
         let socket = await WWebsocket.start('CImVoVHIBNdWjnvN');
         let list_members = socket.members;
         let myId = socket.drone.clientId;
@@ -52,7 +52,7 @@ let call = new function call() {
                         servers[memberId].pc.onaddstream = (event) => {
                             msg.log("video establecido con ", memberId);
                             servers[memberId].remoteStream = event.stream;
-                            addStream({ typeof: "remote", stream: servers[memberId].remoteStream, id: memberId });
+                            addStream({ type: "remote", stream: servers[memberId].remoteStream, IDclient: memberId });
                         };
                         servers[memberId].pc.onicecandidate = (event) => {
                             if (event.candidate === null) {
@@ -105,7 +105,7 @@ let call = new function call() {
                 clients[data.client].pc.onaddstream = (event) => {
                     clients[data.client].remoteStream = event.stream;
                     msg.log("video establecido con ", data.client);
-                    this.addStream({ typeof: "remote", stream: clients[data.client].remoteStream, id: data.client });
+                    this.addStream({ type: "remote", stream: clients[data.client].remoteStream, IDclient: data.client });
                 };
 
                 clients[data.client].pc.oniceconnectionstatechange = () => {
@@ -117,7 +117,7 @@ let call = new function call() {
                         if (clients[data.disconnect]) {
                             delete clients[data.disconnect];
                         }
-                        this.removeStream(data.disconnect);
+                        this.removeStream(data.client);
                     }
                 };
                 await clients[data.client].pc.setRemoteDescription(new RTCSessionDescription(data.offer));
@@ -159,6 +159,7 @@ let call = new function call() {
                 this.removeStream(data.disconnect);
             }
         });
+        return { socket: socket, servers: result, clients: clients, myId: myId, numOnline: numOnline };
     }
 }
 export default call;
